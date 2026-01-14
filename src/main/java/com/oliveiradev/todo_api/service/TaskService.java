@@ -38,14 +38,14 @@ public class TaskService {
 
     public Task createTask(TaskRequestDTO dto) {
 
-        User user = userRepository.findById(dto.getUserId())
+        User user = userRepository.findById(dto.userId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Task task = new Task();
-        task.setTitulo(dto.getTitulo());
-        task.setDescricao(dto.getDescricao());
-        task.setStatus(StatusTask.valueOf(dto.getStatus()));
-        task.setPrioridade(PrioridadeTask.valueOf(dto.getPrioridade()));
+        task.setTitulo(dto.titulo());
+        task.setDescricao(dto.descricao());
+        task.setStatus(StatusTask.valueOf(dto.status()));
+        task.setPrioridade(PrioridadeTask.valueOf(dto.prioridade()));
 
         task.setUser(user);
 
