@@ -20,4 +20,4 @@ api:
   security:
     token:
       # O algoritmo HS256 exige uma senha longa (min 32 caracteres recom.)
-      secret: My-Top-Secret-Master-Key
+      secret: My-Top-Secret-Master-Key-Version-Safe-For-2026
