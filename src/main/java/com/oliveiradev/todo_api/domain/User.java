@@ -15,6 +15,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @Column(nullable = false)
     private String nome;
