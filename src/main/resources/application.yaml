@@ -10,8 +10,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update # Isso cria/atualiza as tabelas automaticamente
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+api:
+  security:
+    token:
+      # O algoritmo HS256 exige uma senha longa (min 32 caracteres recom.)
+      secret: My-Top-Secret-Master-Key
