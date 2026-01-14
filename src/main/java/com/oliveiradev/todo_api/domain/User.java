@@ -5,17 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -31,4 +32,7 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+
+    /*@OneToMany(mappedBy = "user")
+    private List<Task> tasks;*/
 }
