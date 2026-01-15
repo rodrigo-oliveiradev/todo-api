@@ -1,10 +1,11 @@
 package com.oliveiradev.todo_api.controller;
 
-import com.oliveiradev.todo_api.domain.Task;
-import com.oliveiradev.todo_api.domain.User;
 import com.oliveiradev.todo_api.dto.TaskRequestDTO;
+import com.oliveiradev.todo_api.dto.TaskResponseDTO;
 import com.oliveiradev.todo_api.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +19,27 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    // Agora recebe o DTO e valida os campos (@NotBlank, etc)
+    // Criar tarefa
     @PostMapping
-    public Task createTask(@RequestBody @Valid TaskRequestDTO dto) {
-        return taskService.createTask(dto);
+    public ResponseEntity<TaskResponseDTO> create(
+            @Valid @RequestBody TaskRequestDTO dto) {
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(taskService.create(dto));
     }
 
+    // Listar todas as tarefas
     @GetMapping
-    public List<Task> listTasksByUser() {
-        // Mock provisório até a gente ter o Login funcionando
-        User user = new User();
-        user.setId(1L);
+    public ResponseEntity<List<TaskResponseDTO>> findAll() {
+        return ResponseEntity.ok(taskService.findAll());
+    }
 
-        return taskService.findTasksByUser(user);
+    // Listar tarefas por usuário
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TaskResponseDTO>> findByUser(
+            @PathVariable Long userId) {
+
+        return ResponseEntity.ok(taskService.findByUser(userId));
     }
 }

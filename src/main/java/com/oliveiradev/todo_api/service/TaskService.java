@@ -5,16 +5,16 @@ import com.oliveiradev.todo_api.domain.User;
 import com.oliveiradev.todo_api.domain.enums.PrioridadeTask;
 import com.oliveiradev.todo_api.domain.enums.StatusTask;
 import com.oliveiradev.todo_api.dto.TaskRequestDTO;
+import com.oliveiradev.todo_api.dto.TaskResponseDTO;
+import com.oliveiradev.todo_api.exception.ResourceNotFoundException;
 import com.oliveiradev.todo_api.repository.TaskRepository;
 import com.oliveiradev.todo_api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TaskService {
-
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
@@ -23,32 +23,39 @@ public class TaskService {
         this.userRepository = userRepository;
     }
 
-    // Pode manter por enquanto
-    public Task createTask(Task task) {
-        return taskRepository.save(task);
-    }
-
-    public List<Task> findTasksByUser(User user) {
-        return taskRepository.findByUser(user);
-    }
-
-    public Optional<Task> findById(Long id) {
-        return taskRepository.findById(id);
-    }
-
-    public Task createTask(TaskRequestDTO dto) {
-
+    // Criar tarefa
+    public TaskResponseDTO create(TaskRequestDTO dto) {
         User user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Task task = new Task();
         task.setTitulo(dto.titulo());
         task.setDescricao(dto.descricao());
         task.setStatus(StatusTask.valueOf(dto.status()));
         task.setPrioridade(PrioridadeTask.valueOf(dto.prioridade()));
-
         task.setUser(user);
 
-        return taskRepository.save(task);
+        Task saved = taskRepository.save(task);
+
+        return TaskResponseDTO.from(saved);
+    }
+
+    // Buscar todas as tarefas
+    public List<TaskResponseDTO> findAll() {
+        return taskRepository.findAll()
+                .stream()
+                .map(TaskResponseDTO::from)
+                .toList();
+    }
+
+    // Buscar tarefas por usuário
+    public List<TaskResponseDTO> findByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return taskRepository.findByUser(user)
+                .stream()
+                .map(TaskResponseDTO::from)
+                .toList();
     }
 }
